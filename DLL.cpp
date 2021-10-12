@@ -43,6 +43,15 @@ DLL::DLL(string t, string l, int m, int s){  // constructor, initializes a list 
 void DLL::push(string t, string a, int m, int s){
 	//TODO:push DLL.cpp
 
+	DNode *n = new DNode(t,a,m,s);
+
+	if(numSongs == 0){
+		first = n;
+	}else{
+		last = n;
+	}
+
+	numSongs++;
 }
 
 /*
@@ -50,8 +59,14 @@ void DLL::push(string t, string a, int m, int s){
  * song object in the song class definitions, called printSong(). If you call that, the songs will
  * printed out in the format you see in the output
  */
-void printList(){
+void DLL::printList(){
 	//TODO: printList DLL.cpp
+	DNode *current= first;
+
+	while(current!=NULL){
+		current->song->printSong();
+		current = current->next;
+	}
 }
 
 /*
@@ -71,7 +86,7 @@ int remove(string t){
  * NULL and the numSongs field to 0. It returns a song object.
  */
 Song *pop(){
-	//TODO: *pop DLL.cpp
+	//TODO:pop DLL.cpp
 }
 
 /*
