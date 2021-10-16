@@ -33,6 +33,19 @@ DLL::DLL(string t, string l, int m, int s){  // constructor, initializes a list 
 DLL::~DLL(){
 	//TODO: DESTRUCTOR
 	//need to make a destructor here -- read instructions pdf
+	//opposite of constructor?
+
+	DNode *current = first;
+	DNode *next;
+
+	while(current != NULL){
+		next = current->next;
+		delete current;
+		current = next;
+	}
+	last = NULL;
+	first = NULL;
+	numSongs = 0;
 }
 
 
@@ -51,7 +64,10 @@ void DLL::push(string t, string a, int m, int s){
 
 	if(numSongs == 0){
 		first = n;
+		last = first;
 	}else{
+		n->prev = last;
+		last->next = n;
 		last = n;
 	}
 
@@ -70,7 +86,6 @@ void DLL::printList(){
 	while(current != NULL){
 		current->song->printSong();
 		current = current->next;
-		//current->song->printSong();
 	}
 }
 
@@ -93,7 +108,16 @@ int DLL::remove(string t){
  */
 Song *DLL::pop(){
 	//TODO:pop DLL.cpp
+//	if(first->next == nullptr){
+//		first = NULL;
+//		last = NULL;
+//		numSongs = 0;
+//	}
+//
+//	last->prev->next = NULL;
+//	last = last->prev;
 
+//EMMA
 	DNode *temp = last;
 	Song *x = temp->song;
 	last=last->prev;
@@ -141,6 +165,15 @@ void DLL::moveDown(string t){
  */
 void DLL::listDuration(int *tm, int *ts){
 	//TODO: listDuration DLL.cpp
+	DNode *current = first;
+
+	while(current != NULL){
+		//calc total sec and min
+		*ts += current->song->sec;
+		*tm += current->song->min;
+		//go to next song
+		current = current->next;
+	}
 }
 
 /*

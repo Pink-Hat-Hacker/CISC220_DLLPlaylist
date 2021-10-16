@@ -74,6 +74,9 @@ void Playlist::interface() {
 		else if (choice == 8) {
 			ByeNow();
 		}
+		else if (choice == 9){
+			list->printList();
+		}
 	}
 }
 
