@@ -67,9 +67,10 @@ void DLL::printList(){
 	//TODO: printList DLL.cpp
 	DNode *current= first;
 
-	while(current!=NULL){
+	while(current != NULL){
 		current->song->printSong();
 		current = current->next;
+		//current->song->printSong();
 	}
 }
 
@@ -93,7 +94,13 @@ int DLL::remove(string t){
 Song *DLL::pop(){
 	//TODO:pop DLL.cpp
 
-	//EMMA
+	DNode *temp = last;
+	Song *x = temp->song;
+	last=last->prev;
+	delete temp;
+	last->next = NULL;
+	numSongs--;
+	return x;
 }
 
 /*
@@ -101,6 +108,22 @@ Song *DLL::pop(){
  */
 void DLL::moveUp(string t){
 	//TODO: moveUp DLL.cpp
+	//EMMA
+	DNode *temp=first;
+	DNode *helper=NULL;
+	while(temp!=NULL){
+		if(temp->song->title == t){
+			//might only work if the song isn't first or last
+			helper=temp->prev;
+			temp->next->prev=temp->prev;
+			helper->prev->next=helper->next;
+			temp->prev->next=temp->next;
+			helper->next->prev=helper->prev;
+
+		}
+	}
+	delete temp;
+	delete helper;
 }
 
 /*
@@ -130,17 +153,34 @@ void DLL::makeRandom(){
 
 	int randomInd;
 
+	//goes through ref node to change them
 	for(int i = 0; i<numSongs; i++){
 		random = current;
-		randomInd = (rand()%numSongs+1);
+		randomInd = (rand()%numSongs+1);//set rand node away from curr
 
-		for(int j = 0; j < randomInd; j++){
+		for(int j = 0; j < randomInd; j++){//find rand node
 			if(random->next == NULL){
 				randomInd = j;
 				break;
 			}
+			random = random->next;
+		}
+		//move rand node to current node
+		for(int x = 0; x<randomInd; x++){
+			moveUp(random->song->title);
 		}
 	}
+
+	//fixes the first and last nodes
+	randomInd = (rand()%numSongs)+1;
+	for(int y = 0; y < randomInd; y++){
+		moveUp(current->song->title);
+	}
+	current = first;
+	while(current->next != NULL){
+		current = current->next;
+	}
+	last = current;
 }
 
 
