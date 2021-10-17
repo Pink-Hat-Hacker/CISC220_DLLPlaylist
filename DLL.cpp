@@ -150,15 +150,6 @@ int DLL::remove(string t){
  */
 Song *DLL::pop(){
 	//TODO:pop DLL.cpp
-//	if(first->next == nullptr){
-//		first = NULL;
-//		last = NULL;
-//		numSongs = 0;
-//	}
-//
-//	last->prev->next = NULL;
-//	last = last->prev;
-
 //EMMA
 	DNode *temp = last;
 	Song *x = temp->song;
@@ -175,22 +166,6 @@ Song *DLL::pop(){
 void DLL::moveUp(string t){
 	//TODO: moveUp DLL.cpp
 	//EMMA
-//	DNode *temp=first;
-//	DNode *helper=NULL;
-//	while(temp!=NULL){
-//		if(temp->song->title == t){
-//			//might only work if the song isn't first or last
-//			helper=temp->prev;
-//			temp->next->prev=temp->prev;
-//			helper->prev->next=helper->next;
-//			temp->prev->next=temp->next;
-//			helper->next->prev=helper->prev;
-//
-//		}
-//	}
-//	delete temp;
-//	delete helper;
-
 	DNode *current = first;
 
 	while(current->song->title != t){
@@ -238,8 +213,6 @@ void DLL::moveUp(string t){
  */
 void DLL::moveDown(string t){
 	//TODO: movDown DLL.cpp
-	//EMMA
-
 	DNode *current = first;
 	while(current->song->title != t){
 		current = current->next;
