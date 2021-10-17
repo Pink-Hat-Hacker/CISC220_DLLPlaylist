@@ -100,6 +100,30 @@ void DLL::printList(){
 int DLL::remove(string t){
 	//TODO: remove DLL.cpp
 	//EMMA
+	DNode *temp= first;
+	int x=0;
+	while(temp!=NULL && x==0){
+		if(temp->song->title == t){
+			if(temp==last){
+				cout << "Removing: " << temp->song->title << ", " << temp->song->artist << ".........." << temp->song->min << ":" << temp->song->sec << endl;
+				pop();
+				x=1;
+			}else if(temp==first){
+				cout << "Removing: " << temp->song->title << ", " << temp->song->artist << ".........." << temp->song->min << ":" << temp->song->sec << endl;
+				first=temp->next;
+				x=1;
+			}else{
+				cout << "Removing: " << temp->song->title << ", " << temp->song->artist << ".........." << temp->song->min << ":" << temp->song->sec << endl;
+				temp->prev->next=temp->next;
+				temp->next->prev=temp->prev;
+				x=1;
+			}
+		}else{
+			temp = temp->next;
+		}
+	}
+	delete temp;
+	return x;
 }
 
 /*
@@ -133,21 +157,62 @@ Song *DLL::pop(){
 void DLL::moveUp(string t){
 	//TODO: moveUp DLL.cpp
 	//EMMA
-	DNode *temp=first;
-	DNode *helper=NULL;
-	while(temp!=NULL){
-		if(temp->song->title == t){
-			//might only work if the song isn't first or last
-			helper=temp->prev;
-			temp->next->prev=temp->prev;
-			helper->prev->next=helper->next;
-			temp->prev->next=temp->next;
-			helper->next->prev=helper->prev;
+//	DNode *temp=first;
+//	DNode *helper=NULL;
+//	while(temp!=NULL){
+//		if(temp->song->title == t){
+//			//might only work if the song isn't first or last
+//			helper=temp->prev;
+//			temp->next->prev=temp->prev;
+//			helper->prev->next=helper->next;
+//			temp->prev->next=temp->next;
+//			helper->next->prev=helper->prev;
+//
+//		}
+//	}
+//	delete temp;
+//	delete helper;
 
-		}
+	DNode *current = first;
+
+	while(current->song->title != t){
+		current = current->next;
 	}
-	delete temp;
-	delete helper;
+
+	if(current->prev == NULL){ //first case
+		last->next = current;
+		current->next->prev = NULL;
+		first = current->next;
+		current->prev = last;
+		last = current;
+		current->next = NULL;
+		last->next = NULL;
+	}else if(current->prev->prev == NULL){ //second case
+		current->next->prev = current->prev;
+		current->prev->next = current->next;
+		current->next = current->prev;
+		current->prev->prev = current;
+		current->prev = NULL;
+		first = current;
+	}else if(current->next == NULL){ //last case
+		current->prev->prev->next = current;
+		current->prev->next = NULL;
+		current->next = current->prev;
+		DNode *temp;
+		temp = current->prev->prev;
+		current->prev->prev = current;
+		last = current->prev;
+		current->prev = temp;
+	}else{ //middle case
+		current->prev->prev->next = current;
+		current->next->prev = current->prev;
+		current->prev->next = current->next;
+		current->next = current->prev;
+		DNode *temp;
+		temp = current->prev->prev;
+		current->prev->prev = current;
+		current->prev = temp;
+	}
 }
 
 /*
@@ -155,6 +220,41 @@ void DLL::moveUp(string t){
  */
 void DLL::moveDown(string t){
 	//TODO: movDown DLL.cpp
+	//EMMA
+
+	DNode *current = first;
+	while(current->song->title != t){
+		current = current->next;
+	}
+
+	//last
+	if(current->next == NULL){
+		current->prev->next = NULL;
+		last = current->prev;
+		first->prev = current;
+		current->next = first;
+		current->prev = NULL;
+		first = current;
+	}else if(current->prev == NULL){//first
+		current->next->next->prev = current;
+		current->next->prev = NULL;
+		current->prev = current->next;
+
+		DNode *temp = current->next->next;
+		current->next->next = current;
+		current->next = temp;
+		first = current->prev;
+	}else{//middle
+		current->next->next->prev = current;
+		current->prev->next = current->next;
+		current->next->prev = current->prev;
+		current->prev = current->next;
+
+		DNode *temp;
+		temp = current->next->next;
+		current->next->next = current;
+		current->next = temp;
+	}
 }
 
 
@@ -183,34 +283,33 @@ void DLL::makeRandom(){
 	//TODO: makeRandom DLL.cpp
 	DNode *current = first;
 	DNode *random;
-
-	int randomInd;
+	int randInd;
 
 	//goes through ref node to change them
-	for(int i = 0; i<numSongs; i++){
+	for(int i = 0; i < numSongs; i++){
 		random = current;
-		randomInd = (rand()%numSongs+1);//set rand node away from curr
+		randInd = (rand()%numSongs + 1);//set rand node away from curr
 
-		for(int j = 0; j < randomInd; j++){//find rand node
-			if(random->next == NULL){
-				randomInd = j;
+		for(int j = 0; j < randInd; j++){//find rand node
+			if(random->next == nullptr){
+				randInd = j;
 				break;
 			}
 			random = random->next;
 		}
 		//move rand node to current node
-		for(int x = 0; x<randomInd; x++){
+		for(int x = 0; x < randInd; x++){
 			moveUp(random->song->title);
 		}
 	}
 
 	//fixes the first and last nodes
-	randomInd = (rand()%numSongs)+1;
-	for(int y = 0; y < randomInd; y++){
+	randInd = (rand()%numSongs) + 1;
+	for(int y = 0; y < randInd; y++){
 		moveUp(current->song->title);
 	}
 	current = first;
-	while(current->next != NULL){
+	while(current->next != nullptr){
 		current = current->next;
 	}
 	last = current;
