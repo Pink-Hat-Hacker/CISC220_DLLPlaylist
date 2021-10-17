@@ -105,20 +105,38 @@ int DLL::remove(string t){
 	while(temp!=NULL && x==0){
 		if(temp->song->title == t){
 			if(temp==last){
-				cout << "Removing: " << temp->song->title << ", " << temp->song->artist << ".........." << temp->song->min << ":" << temp->song->sec << endl;
+				if(temp->song->sec < 10){
+					cout << "Removing: " << temp->song->title << ", " << temp->song->artist << ".............." << temp->song->min << ":0" << temp->song->sec << endl;
+				}
+				else{
+					cout << "Removing: " << temp->song->title << ", " << temp->song->artist << ".............." << temp->song->min << ":" << temp->song->sec << endl;
+				}
 				pop();
 				x=1;
-			}else if(temp==first){
-				cout << "Removing: " << temp->song->title << ", " << temp->song->artist << ".........." << temp->song->min << ":" << temp->song->sec << endl;
+			}
+			else if(temp==first){
+				if(temp->song->sec < 10){
+					cout << "Removing: " << temp->song->title << ", " << temp->song->artist << ".............." << temp->song->min << ":0" << temp->song->sec << endl;
+				}
+				else{
+					cout << "Removing: " << temp->song->title << ", " << temp->song->artist << ".............." << temp->song->min << ":" << temp->song->sec << endl;
+				}
 				first=temp->next;
 				x=1;
-			}else{
-				cout << "Removing: " << temp->song->title << ", " << temp->song->artist << ".........." << temp->song->min << ":" << temp->song->sec << endl;
+			}
+			else{
+				if(temp->song->sec < 10){
+					cout << "Removing: " << temp->song->title << ", " << temp->song->artist << ".............." << temp->song->min << ":0" << temp->song->sec << endl;
+				}
+				else{
+					cout << "Removing: " << temp->song->title << ", " << temp->song->artist << ".............." << temp->song->min << ":" << temp->song->sec << endl;
+				}
 				temp->prev->next=temp->next;
 				temp->next->prev=temp->prev;
 				x=1;
 			}
-		}else{
+		}
+		else{
 			temp = temp->next;
 		}
 	}
@@ -244,6 +262,22 @@ void DLL::moveDown(string t){
 		current->next->next = current;
 		current->next = temp;
 		first = current->prev;
+	}else if(current->next->next == NULL){//second to last
+
+//		point to current to prev to next = current to the next
+//		current to next to prev = current to prev
+//		current to prev = current to next
+//		current to next to next = current
+//		current to next = null
+//		last = current
+
+		current->prev->next = current->next;
+		current->next->prev = current->prev;
+		current->prev = current->next;
+		current->next->next = current;
+		current->next = NULL;
+		last = current;
+//		current = last;
 	}else{//middle
 		current->next->next->prev = current;
 		current->prev->next = current->next;
@@ -291,7 +325,7 @@ void DLL::makeRandom(){
 		randInd = (rand()%numSongs + 1);//set rand node away from curr
 
 		for(int j = 0; j < randInd; j++){//find rand node
-			if(random->next == nullptr){
+			if(random->next == NULL){
 				randInd = j;
 				break;
 			}
@@ -309,7 +343,7 @@ void DLL::makeRandom(){
 		moveUp(current->song->title);
 	}
 	current = first;
-	while(current->next != nullptr){
+	while(current->next != NULL){
 		current = current->next;
 	}
 	last = current;
